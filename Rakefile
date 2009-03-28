@@ -32,6 +32,22 @@ task :clean do
   FileUtils.rm_rf 'coverage'
 end
 
+desc "Install gem locally"
+task :installer do
+  sh "sudo gem install data_fabric-*.gem"
+end
+
+task :gem do
+  sh "gem build data_fabric.gemspec"
+end
+
+desc "Push gem to RubyForge"
+task :publish => [:clean, :gemspec, :gem, :installer] do
+  require 'lib/data_fabric/version'
+  sh "rubyforge add_release fiveruns data_fabric #{DataFabric::Version::STRING} data_fabric-#{DataFabric::Version::STRING}.gem"
+end
+
+
 task :default => :test
 task :test => [:pretest]
 
