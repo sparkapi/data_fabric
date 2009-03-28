@@ -3,6 +3,7 @@ DataFabric changelog
 v1.2.5 - 2009-03-28
 
 - data_fabric should now work as a gem or plugin.
+- Move from echoe to Jeweler for gem maintenance.
 
 v1.2.4 - 2009-03-09
 

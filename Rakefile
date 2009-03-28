@@ -1,21 +1,38 @@
 require 'rubygems'
-require 'echoe'
 
-require File.dirname(__FILE__) << "/lib/data_fabric/version"
+begin
+  require 'jeweler'
 
-Echoe.new 'data_fabric' do |p|
-  p.version = DataFabric::Version::STRING
-  p.author = "Mike Perham"
-  p.email  = 'mperham@gmail.com'
-  p.project = 'fiveruns'
-  p.summary = 'Sharding and replication support for ActiveRecord 2.x'
-  p.url = "http://github.com/mperham/data_fabric"
-  p.development_dependencies = []
-  p.rubygems_version = nil
-  p.include_rakefile = true
-  p.test_pattern = 'test/*_test.rb'
+  Jeweler::Tasks.new do |p|
+    p.authors = ["Mike Perham"]
+    p.email  = 'mperham@gmail.com'
+    p.rubyforge_project = 'fiveruns'
+    p.summary = 'Sharding and replication support for ActiveRecord 2.x'
+    p.homepage = "http://github.com/mperham/data_fabric"
+    p.name = "data_fabric"
+    p.files =  FileList['*.rdoc', 'Rakefile', 'VERSION.yml', 'init.rb', 'CHANGELOG', "{lib,test,rails,example,example22}/**/*", ]
+  end
+rescue LoadError
+  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
+require 'rake/testtask'
+
+Rake::TestTask.new do |t|
+  t.verbose = true
+  t.test_files = FileList['test/*_test.rb']
+end
+
+task :gemspec => [:clean]
+
+task :clean do
+  FileUtils.rm_f Dir['*.gem']
+  FileUtils.rm_f Dir['test/*.db']
+  FileUtils.rm_rf 'pkg'
+  FileUtils.rm_rf 'coverage'
+end
+
+task :default => :test
 task :test => [:pretest]
 
 desc "Test all versions of ActiveRecord installed locally"
