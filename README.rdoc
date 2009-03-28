@@ -15,6 +15,13 @@ basket.  :-)
 
   gem install data_fabric
 
+then in config/environment.rb, add a config.gem entry:
+
+  Rails::Initializer.run do |config|
+    ...
+    config.gem 'data_fabric'
+
+
 == How does it work?
 
 You describe the topology for your database infrastructure in your model(s).  
