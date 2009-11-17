@@ -23,7 +23,7 @@ module DataFabric
         
         class << self
           def connection
-            @proxy
+            @proxy || super
           end
 
           def connected?
