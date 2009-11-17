@@ -124,7 +124,7 @@ end
 
 # Test coverage
 begin
-  gem 'spicycode-rcov' rescue nil
+  gem 'rcov' rescue nil
   require 'rcov/rcovtask'
 
   desc "Generate coverage numbers for all locally installed versions of ActiveRecord"
@@ -144,5 +144,5 @@ begin
     t.rcov_opts = ['--text-report', '--exclude', "test,Library,#{ENV['GEM_HOME']}", '--sort', 'coverage']
   end
 rescue LoadError => e
-  puts 'Test coverage support requires \'gem install spicycode-rcov\''
+  puts 'Test coverage support requires \'gem install rcov --source=http://gemcutter.org/\''
 end
