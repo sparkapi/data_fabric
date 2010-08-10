@@ -6,20 +6,22 @@ begin
   Jeweler::Tasks.new do |p|
     p.authors = ["Mike Perham"]
     p.email  = 'mperham@gmail.com'
-    p.rubyforge_project = 'fiveruns'
     p.summary = 'Sharding and replication support for ActiveRecord 2.x'
     p.homepage = "http://github.com/mperham/data_fabric"
     p.name = "data_fabric"
     p.files =  FileList['*.rdoc', 'Rakefile', 'VERSION.yml', 'init.rb', 'CHANGELOG', "{lib,test,rails,example,example22}/**/*", ]
+    p.add_development_dependency 'jeweler'
+    p.add_development_dependency 'flexmock'
   end
 rescue LoadError
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "Jeweler, or one of its dependencies, is not available. Install it with: gem install jeweler"
 end
 
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
   t.verbose = true
+  t.libs << 'test' << 'rails'
   t.test_files = FileList['test/*_test.rb']
 end
 
@@ -34,7 +36,7 @@ end
 
 desc "Install gem locally"
 task :installer do
-  sh "sudo gem install data_fabric-*.gem"
+  sh "gem install data_fabric-*.gem"
 end
 
 task :gem do
@@ -44,7 +46,7 @@ end
 desc "Push gem to RubyForge"
 task :publish => [:clean, :gemspec, :gem, :installer] do
   require 'lib/data_fabric/version'
-  sh "rubyforge add_release fiveruns data_fabric #{DataFabric::Version::STRING} data_fabric-#{DataFabric::Version::STRING}.gem"
+  sh "gem push pkg/data_fabric-#{DataFabric::Version::STRING}.gem"
 end
 
 
@@ -144,5 +146,5 @@ begin
     t.rcov_opts = ['--text-report', '--exclude', "test,Library,#{ENV['GEM_HOME']}", '--sort', 'coverage']
   end
 rescue LoadError => e
-  puts 'Test coverage support requires \'gem install rcov --source=http://gemcutter.org/\''
+  puts 'Test coverage support requires \'gem install rcov\''
 end
