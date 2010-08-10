@@ -45,7 +45,7 @@ end
 
 desc "Push gem to RubyForge"
 task :publish => [:clean, :gemspec, :gem, :installer] do
-  require 'lib/data_fabric/version'
+  require './lib/data_fabric/version'
   sh "gem push data_fabric-#{DataFabric::Version::STRING}.gem"
 end
 
