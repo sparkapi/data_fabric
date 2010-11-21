@@ -1,5 +1,7 @@
 require 'active_record'
 require 'active_record/version'
+require 'active_record/connection_adapters/abstract/connection_pool'
+require 'active_record/connection_adapters/abstract/connection_specification'
 require 'data_fabric/version'
 
 # DataFabric adds a new level of flexibility to ActiveRecord connection handling.

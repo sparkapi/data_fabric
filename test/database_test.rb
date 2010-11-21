@@ -16,11 +16,7 @@ class DatabaseTest < Test::Unit::TestCase
   def test_features
     DataFabric.activate_shard :city => :dallas do
       assert_equal 'fiveruns_city_dallas_test_slave', TheWholeBurrito.connection.connection_name
-
-      assert_raises RuntimeError do
-        TheWholeBurrito.connection_pool
-      end
-
+      assert_equal DataFabric::PoolProxy, TheWholeBurrito.connection_pool.class
       assert !TheWholeBurrito.connected?
 
       # Should use the slave

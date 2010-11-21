@@ -18,8 +18,30 @@ module DataFabric
     end
   end
   
+  class PoolProxy
+    def initialize(proxy)
+      @proxy = proxy
+    end
+    def connection
+      @proxy
+    end
+    def release_connection
+      DataFabric.logger.debug { 'data_fabric does not implement release_connection' }
+    end
+    def spec
+      @proxy.spec
+    end
+    def with_connection
+      yield @proxy
+    end
+    def connected?
+      @proxy.connected?
+    end
+  end
+
   class ConnectionProxy
     cattr_accessor :shard_pools
+    attr_accessor :spec
     
     def initialize(model_class, options)
       @model_class = model_class      
@@ -70,6 +92,10 @@ module DataFabric
       current_pool.connected?
     end
 
+    def connection
+      current_pool.connection
+    end
+
   private
 
     def in_transaction?
@@ -90,7 +116,7 @@ module DataFabric
       config = config.symbolize_keys
       adapter_method = "#{config[:adapter]}_connection"
       initialize_adapter(config[:adapter])
-      ActiveRecord::Base::ConnectionSpecification.new(config, adapter_method)
+      @spec = ActiveRecord::Base::ConnectionSpecification.new(config, adapter_method)
     end
     
     def initialize_adapter(adapter)
@@ -113,16 +139,12 @@ module DataFabric
         clauses << @prefix if @prefix
         clauses << @shard_group if @shard_group
         clauses << StringProxy.new { DataFabric.active_shard(@shard_group) } if @shard_group
-        clauses << Rails.env
+        clauses << RAILS_ENV
         clauses << StringProxy.new { current_role } if @replicated
         clauses
       end
     end
     
-    def connection
-      current_pool.connection
-    end
-
     def set_role(role)
       Thread.current[:data_fabric_role] = role
     end
@@ -135,4 +157,5 @@ module DataFabric
       with_master { return connection }
     end
   end
+
 end

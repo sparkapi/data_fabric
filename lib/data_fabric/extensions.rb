@@ -1,4 +1,3 @@
-require 'active_record/connection_adapters/abstract/connection_pool'
 require 'data_fabric/connection_proxy'
 
 class ActiveRecord::ConnectionAdapters::ConnectionHandler
@@ -23,25 +22,7 @@ module DataFabric
     module ClassMethods
       def data_fabric(options)
         DataFabric.logger.info { "Creating data_fabric proxy for class #{name}" }
-        @proxy = DataFabric::ConnectionProxy.new(self, options)
-        
-        class << self
-          def connection
-            @proxy || superclass.connection
-          end
-
-          def connected?
-            @proxy.connected?
-          end
-
-          def remove_connection(klass=self)
-            DataFabric.logger.warn { "remove_connection not implemented by data_fabric" }
-          end
-
-          def connection_pool
-            raise "dynamic connection switching means you cannot get direct access to a pool"
-          end
-        end
+        connection_handler.connection_pools[name] = PoolProxy.new(ConnectionProxy.new(self, options))
       end
     end
   end

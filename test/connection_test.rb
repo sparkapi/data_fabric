@@ -14,21 +14,29 @@ class TheWholeEnchilada < ActiveRecord::Base
 end
 
 class AdapterMock < ActiveRecord::ConnectionAdapters::AbstractAdapter
-  # Minimum required to perform a find with no results
+  # Minimum required to perform a find with no results.
+  # Works on 2.3.10, 3.0.0 and 3.0.3.
    def columns(table_name, name=nil)
-     []
+     [ActiveRecord::ConnectionAdapters::Column.new('id', 0, :integer, false)]
+   end
+   def primary_key(name)
+     :id
+   end
+   def adapter_name
+     'mysql'
    end
    def select(sql, name=nil)
      []
    end
    def execute(sql, name=nil)
-     0
+     []
    end
-   
-   def name
-     'fake-db'
+   def tables
+     ["enchiladas", "the_whole_burritos"]
    end
-  
+   def table_exists?(name)
+     true
+   end
    def method_missing(name, *args)
      raise ArgumentError, "#{self.class.name} missing '#{name}': #{args.inspect}"
    end
