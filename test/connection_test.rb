@@ -98,11 +98,8 @@ class ConnectionTest < Test::Unit::TestCase
   private
   
   def setup_configuration_for(clazz, name)
-    if ar22?
-      flexmock(ActiveRecord::ConnectionAdapters::ConnectionPool).new_instances.should_receive(:new_connection).and_return(AdapterMock.new(RawConnection.new))
-    else
-      flexmock(clazz).should_receive(:mysql_connection).and_return(AdapterMock.new(RawConnection.new))      
-    end
+    flexmock(ActiveRecord::ConnectionAdapters::ConnectionPool).new_instances.should_receive(
+      :new_connection).and_return(AdapterMock.new(RawConnection.new))
     ActiveRecord::Base.configurations ||= HashWithIndifferentAccess.new
     ActiveRecord::Base.configurations[name] = HashWithIndifferentAccess.new({ :adapter => 'mysql', :database => name, :host => 'localhost'})
   end

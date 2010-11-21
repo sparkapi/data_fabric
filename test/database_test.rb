@@ -10,14 +10,10 @@ class DatabaseTest < Test::Unit::TestCase
   
   def setup
     ActiveRecord::Base.configurations = load_database_yml
-    if ar22?
-      DataFabric::ConnectionProxy.shard_pools.clear
-    end
+    DataFabric::ConnectionProxy.shard_pools.clear
   end
 
-  def test_ar22_features
-    return unless ar22?
-
+  def test_features
     DataFabric.activate_shard :city => :dallas do
       assert_equal 'fiveruns_city_dallas_test_slave', TheWholeBurrito.connection.connection_name
 

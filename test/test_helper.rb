@@ -5,7 +5,7 @@ DATABASE_YML_PATH = File.join(ROOT_PATH, "test", "database.yml")
 Dir.chdir(ROOT_PATH)
 
 require 'rubygems'
-require 'test/unit'
+require 'minitest/unit'
 require 'erb'
 require 'logger'
 
@@ -18,20 +18,13 @@ end
 require 'active_record'
 require 'active_record/version'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.logger.level = Logger::WARN
+ActiveRecord::Base.logger.level = Logger::DEBUG
 
-# Bootstrap DF
-deps = defined?(ActiveSupport::Dependencies) ? ActiveSupport::Dependencies : Dependencies
-deps.autoload_paths << File.join(File.dirname(__FILE__), '../lib')
-require 'init'
+require 'data_fabric'
 
 def load_database_yml
   filename = DATABASE_YML_PATH
   YAML::load(ERB.new(IO.read(filename)).result)
-end
-
-def ar22?
-  ActiveRecord::VERSION::STRING >= '2.2.0'
 end
 
 if !File.exist?(DATABASE_YML_PATH)

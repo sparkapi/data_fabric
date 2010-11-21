@@ -38,20 +38,12 @@ require 'data_fabric/version'
 # end
 module DataFabric
 
-  # Set this logger to log DataFabric operations.
-  # The logger should quack like a standard Ruby Logger.
-  mattr_accessor :logger
-
-  def self.init
-    logger = ActiveRecord::Base.logger unless logger
-    log { "Loading data_fabric #{DataFabric::Version::STRING} with ActiveRecord #{ActiveRecord::VERSION::STRING}" }
-
-    if ActiveRecord::VERSION::STRING < '2.2.0'
-      require 'data_fabric/ar20'
-    else
-      require 'data_fabric/ar22'
-    end
-    ActiveRecord::Base.send(:include, DataFabric::Extensions)
+  def self.logger
+    @logger ||= ActiveRecord::Base.logger
+  end
+  
+  def self.logger=(log)
+    @logger = log
   end
   
   def self.activate_shard(shards, &block)
@@ -99,8 +91,7 @@ module DataFabric
     Thread.current[:shards] = {} unless Thread.current[:shards]
   end
 
-  def self.log(level=Logger::INFO, &block)
-    logger && logger.add(level, &block)
-  end
-
 end
+
+require 'data_fabric/extensions'
+ActiveRecord::Base.send(:include, DataFabric::Extensions)

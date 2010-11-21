@@ -1,47 +1,23 @@
-
-class ActiveRecord::ConnectionAdapters::ConnectionHandler
-  def clear_active_connections_with_data_fabric!
-    clear_active_connections_without_data_fabric!
-    DataFabric::ConnectionProxy.shard_pools.each_value { |pool| pool.release_connection }
-  end
-  alias_method_chain :clear_active_connections!, :data_fabric
-end
-
 module DataFabric
-  module Extensions
-    def self.included(model)
-      # Wire up ActiveRecord::Base
-      model.extend ClassMethods
-      ConnectionProxy.shard_pools = {}
+  module ActiveRecordConnectionMethods
+    def self.included(base)
+      base.alias_method_chain :reload, :master
     end
 
-    # Class methods injected into ActiveRecord::Base
-    module ClassMethods
-      def data_fabric(options)
-        DataFabric.log { "Creating data_fabric proxy for class #{name}" }
-        @proxy = DataFabric::ConnectionProxy.new(self, options)
-        
-        class << self
-          def connection
-            @proxy || superclass.connection
-          end
-
-          def connected?
-            @proxy.connected?
-          end
-
-          def remove_connection(klass=self)
-            DataFabric.log(Logger::WARN) { "remove_connection not implemented by data_fabric" }
-          end
-
-          def connection_pool
-            raise "dynamic connection switching means you cannot get direct access to a pool"
-          end
-        end
-      end
+    def reload_with_master(*args, &block)
+      connection.with_master { reload_without_master }
     end
   end
 
+  class StringProxy
+    def initialize(&block)
+      @proc = block
+    end
+    def to_s
+      @proc.call
+    end
+  end
+  
   class ConnectionProxy
     cattr_accessor :shard_pools
     
@@ -73,7 +49,7 @@ module DataFabric
     end
 
     def method_missing(method, *args, &block)
-      DataFabric.log(Logger::DEBUG) { "Calling #{method} on #{connection}" }
+      DataFabric.logger.debug { "Calling #{method} on #{connection}" }
       connection.send(method, *args, &block)
     end
 
@@ -157,25 +133,6 @@ module DataFabric
 
     def master
       with_master { return connection }
-    end
-  end
-
-  module ActiveRecordConnectionMethods
-    def self.included(base)
-      base.alias_method_chain :reload, :master
-    end
-
-    def reload_with_master(*args, &block)
-      connection.with_master { reload_without_master }
-    end
-  end
-
-  class StringProxy
-    def initialize(&block)
-      @proc = block
-    end
-    def to_s
-      @proc.call
     end
   end
 end
