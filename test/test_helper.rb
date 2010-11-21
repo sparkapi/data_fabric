@@ -6,6 +6,8 @@ Dir.chdir(ROOT_PATH)
 
 require 'rubygems'
 require 'test/unit'
+require 'erb'
+require 'logger'
 
 version = ENV['AR_VERSION']
 if version
@@ -20,7 +22,7 @@ ActiveRecord::Base.logger.level = Logger::WARN
 
 # Bootstrap DF
 deps = defined?(ActiveSupport::Dependencies) ? ActiveSupport::Dependencies : Dependencies
-deps.load_paths << File.join(File.dirname(__FILE__), '../lib')
+deps.autoload_paths << File.join(File.dirname(__FILE__), '../lib')
 require 'init'
 
 def load_database_yml

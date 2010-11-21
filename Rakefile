@@ -80,6 +80,8 @@ def load_database_yml
 end
 
 def setup_connection
+  require 'erb'
+  require 'logger'
   require 'active_record'
   ActiveRecord::Base.configurations = load_database_yml
   ActiveRecord::Base.logger = Logger.new(STDOUT)

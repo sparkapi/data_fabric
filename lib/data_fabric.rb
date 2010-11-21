@@ -85,9 +85,9 @@ module DataFabric
   def self.active_shard(group)
     raise ArgumentError, 'No shard has been activated' unless Thread.current[:shards]
 
-    returning(Thread.current[:shards][group.to_s]) do |shard|
-      raise ArgumentError, "No active shard for #{group}" unless shard
-    end
+    shard = Thread.current[:shards][group.to_s]
+    raise ArgumentError, "No active shard for #{group}" unless shard
+    shard
   end
   
   def self.shard_active_for?(group)
