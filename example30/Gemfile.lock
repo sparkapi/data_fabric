@@ -1,5 +1,5 @@
 PATH
-  remote: /Users/mike/git/data_fabric
+  remote: ..
   specs:
     data_fabric (1.3.0)
 

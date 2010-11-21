@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.test_files = Dir.glob("test/**/*")
-  s.files = Dir.glob("lib/**/*") + Dir.glob("example23/**/*") + [
+  s.files = Dir.glob("lib/**/*") + Dir.glob("example23/**/*") + Dir.glob("example30/**/*") + [
     "CHANGELOG",
     "README.rdoc",
     "Rakefile",
