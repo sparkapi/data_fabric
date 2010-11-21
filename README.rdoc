@@ -88,6 +88,7 @@ FiveRuns:: for paying me to develop this code and allowing its release
 
 Mike Perham <mperham@gmail.com>
 http://mikeperham.com
+http://twitter.com/mperham
 
 
 == LICENSE:
