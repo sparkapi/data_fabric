@@ -1,25 +1,4 @@
-require 'rubygems'
-
-begin
-  require './lib/data_fabric/version'
-  require 'jeweler'
-  Jeweler::Tasks.new do |p|
-    p.version = DataFabric::Version::STRING
-    p.authors = ["Mike Perham"]
-    p.email  = 'mperham@gmail.com'
-    p.summary = 'Sharding and replication support for ActiveRecord 2.x'
-    p.homepage = "http://github.com/mperham/data_fabric"
-    p.name = "data_fabric"
-    p.files =  FileList['*.rdoc', 'Rakefile', 'init.rb', 'CHANGELOG', "{lib,test,rails,example,example23}/**/*", ]
-    p.add_development_dependency 'jeweler'
-    p.add_development_dependency 'flexmock'
-  end
-rescue LoadError => le
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: gem install jeweler: #{le.message}"
-end
-
 require 'rake/testtask'
-
 Rake::TestTask.new do |t|
   t.verbose = true
   t.libs << 'test' << 'rails'
@@ -27,7 +6,6 @@ Rake::TestTask.new do |t|
 end
 
 task :gemspec => [:clean]
-
 task :clean do
   FileUtils.rm_f Dir['*.gem']
   FileUtils.rm_f Dir['test/*.db']
@@ -42,13 +20,6 @@ end
 task :gem do
   sh "gem build data_fabric.gemspec"
 end
-
-desc "Push gem to RubyForge"
-task :publish => [:clean, :gemspec, :gem, :installer] do
-  require './lib/data_fabric/version'
-  sh "gem push data_fabric-#{DataFabric::Version::STRING}.gem"
-end
-
 
 task :default => :test
 task :test => [:pretest]
