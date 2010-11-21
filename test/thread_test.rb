@@ -5,20 +5,6 @@ class ThreadTest < Test::Unit::TestCase
   
   MUTEX = Mutex.new
 
-  if ActiveRecord::VERSION::STRING < '2.2.0'
-    def test_concurrency_not_allowed
-      assert_raise ArgumentError do
-        Object.class_eval %{
-          class ThreadedEnchilada < ActiveRecord::Base
-            self.allow_concurrency = true
-            set_table_name :enchiladas
-            data_fabric :prefix => 'fiveruns', :replicated => true, :shard_by => :city
-          end
-        }
-      end
-    end
-  end
-  
   def test_class_and_instance_connections
     Object.class_eval %{
       class ThreadedEnchilada < ActiveRecord::Base
