@@ -1,3 +1,4 @@
+require 'active_record/connection_adapters/abstract/connection_pool'
 require 'data_fabric/connection_proxy'
 
 class ActiveRecord::ConnectionAdapters::ConnectionHandler

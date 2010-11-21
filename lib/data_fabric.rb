@@ -39,7 +39,7 @@ require 'data_fabric/version'
 module DataFabric
 
   def self.logger
-    @logger ||= ActiveRecord::Base.logger
+    @logger ||= ActiveRecord::Base.logger || Logger.new('/dev/null')
   end
   
   def self.logger=(log)
