@@ -55,8 +55,10 @@ namespace :app do
   end
 
   task :clean do
+    rm_rf 'log'
     rm_rf 'vendor/gems/data_fabric-1.0.0'
-    rm_f 'db/*.sqlite3'
+    rm_rf Dir['db/*.sqlite3']
+    rm_f 'db/schema.rb'
   end
 
 	task :migrate do

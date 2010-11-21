@@ -1,24 +1,19 @@
+require 'fileutils'
+include FileUtils::Verbose
+
 require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.verbose = true
-  t.libs << 'test' << 'rails'
+  t.libs << 'test'
   t.test_files = FileList['test/*_test.rb']
 end
 
-task :gemspec => [:clean]
 task :clean do
-  FileUtils.rm_f Dir['*.gem']
-  FileUtils.rm_f Dir['test/*.db']
-  FileUtils.rm_rf 'coverage'
-end
+  rm_f Dir['*.gem']
+  rm_f Dir['test/*.db']
+  rm_rf 'coverage'
 
-desc "Install gem locally"
-task :installer do
-  sh "gem install data_fabric-*.gem"
-end
-
-task :gem do
-  sh "gem build data_fabric.gemspec"
+  puts `cd example23 ; rake app:clean`
 end
 
 task :default => :test
