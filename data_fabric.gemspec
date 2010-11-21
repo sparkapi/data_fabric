@@ -12,13 +12,11 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.test_files = Dir.glob("test/**/*")
-  s.files = Dir.glob("lib/**/*") + Dir.glob("example/**/*") + Dir.glob("example23/**/*") + [
+  s.files = Dir.glob("lib/**/*") + Dir.glob("example23/**/*") + [
     "CHANGELOG",
-     "README.rdoc",
-     "Rakefile",
-     "TESTING.rdoc",
-     "init.rb",
-     "rails/init.rb"
+    "README.rdoc",
+    "Rakefile",
+    "TESTING.rdoc"
   ]
   s.homepage = %q{http://github.com/mperham/data_fabric}
   s.require_paths = ["lib"]
