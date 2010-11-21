@@ -1,9 +1,10 @@
 DataFabric changelog
 
-v1.3.0 - 2010-X-Y
+v1.3.0 - 2010-11-22
 
+- Major implementation refactoring
+- Fix issues under Rails 3.0.  Tested with 2.3.10, 3.0.0 and 3.0.3.
 - Drop support for Rails 2.2 (may work but untested)
-- Fix minor issues under Rails 3.0.
 - Remove jeweler dependency
 
 v1.2.7 - 2010-08-10
