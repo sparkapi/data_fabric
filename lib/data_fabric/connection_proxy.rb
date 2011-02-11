@@ -22,20 +22,29 @@ module DataFabric
     def initialize(proxy)
       @proxy = proxy
     end
+
     def connection
       @proxy
     end
-    def release_connection
-      DataFabric.logger.debug { 'data_fabric does not implement release_connection' }
-    end
+
     def spec
       @proxy.spec
     end
+
     def with_connection
       yield @proxy
     end
+
     def connected?
       @proxy.connected?
+    end
+
+    %w(disconnect! release_connection clear_reloadable_connections! clear_stale_cached_connections! verify_active_connections!).each do |name|
+      define_method(name.to_sym) do
+        @proxy.shard_pools.values.each do |pool|
+          pool.send(name.to_sym)
+        end
+      end
     end
   end
 

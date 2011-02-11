@@ -100,7 +100,14 @@ class ConnectionTest < Test::Unit::TestCase
       TheWholeEnchilada.transaction do
         mmmm.save!
       end
+      TheWholeEnchilada.verify_active_connections!
+      TheWholeEnchilada.clear_active_connections!
+      TheWholeEnchilada.clear_all_connections!
     end
+
+    TheWholeEnchilada.verify_active_connections!
+    TheWholeEnchilada.clear_active_connections!
+    TheWholeEnchilada.clear_all_connections!
   end
 
   private
