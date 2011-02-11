@@ -1,5 +1,9 @@
 DataFabric changelog
 
+v1.3.1 - 2011-02-10
+
+- Add some missing ConnectionPool methods (e.g. clear_reloadable_connections!)
+
 v1.3.0 - 2010-11-22
 
 - Major implementation refactoring

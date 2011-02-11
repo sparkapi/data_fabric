@@ -1,12 +1,9 @@
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-require 'data_fabric/version'
+require './lib/data_fabric/version'
 
 Gem::Specification.new do |s|
   s.version = DataFabric::Version::STRING
   s.name = %q{data_fabric}
   s.authors = ["Mike Perham"]
-  s.date = Time.now.utc.strftime("%Y-%m-%d")
   s.email = %q{mperham@gmail.com}
   s.extra_rdoc_files = [
     "README.rdoc"
