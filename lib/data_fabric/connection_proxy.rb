@@ -46,6 +46,17 @@ module DataFabric
         end
       end
     end
+
+    %w(columns columns_hash table_exists? primary_keys).each do |name|
+      define_method(name.to_sym) do |*args|
+        @proxy.current_pool.send(name.to_sym, *args)
+      end
+    end
+
+    def method_missing(name, *args)
+      DataFabric.logger.warn "Add '#{name}' to DataFabric::PoolProxy for performance"
+      @proxy.current_pool.send(name, *args)
+    end
   end
 
   class ConnectionProxy
@@ -105,12 +116,6 @@ module DataFabric
       current_pool.connection
     end
 
-  private
-
-    def in_transaction?
-      current_role == 'master'
-    end
-
     def current_pool
       name = connection_name
       self.class.shard_pools[name] ||= begin
@@ -120,6 +125,12 @@ module DataFabric
       end
     end
     
+    private
+
+    def in_transaction?
+      current_role == 'master'
+    end
+
     def spec_for(config)
       # XXX This looks pretty fragile.  Will break if AR changes how it initializes connections and adapters.
       config = config.symbolize_keys

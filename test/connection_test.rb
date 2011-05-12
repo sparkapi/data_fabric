@@ -37,6 +37,9 @@ class AdapterMock < ActiveRecord::ConnectionAdapters::AbstractAdapter
    def table_exists?(name)
      true
    end
+   def last_inserted_id(result)
+     1
+   end
    def method_missing(name, *args)
      raise ArgumentError, "#{self.class.name} missing '#{name}': #{args.inspect}"
    end
