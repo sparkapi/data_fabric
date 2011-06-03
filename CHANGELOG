@@ -1,5 +1,10 @@
 DataFabric changelog
 
+v1.3.2 - 2011-06-02
+
+- Fix problem fetching spec for connection pool.
+- Fix issues with Rails 3.1.
+
 v1.3.1 - 2011-02-10
 
 - Add some missing ConnectionPool methods (e.g. clear_reloadable_connections!)
