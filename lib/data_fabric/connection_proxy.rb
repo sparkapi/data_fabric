@@ -28,7 +28,7 @@ module DataFabric
     end
 
     def spec
-      @proxy.spec
+      @proxy.current_pool.spec
     end
 
     def with_connection
@@ -61,7 +61,6 @@ module DataFabric
 
   class ConnectionProxy
     cattr_accessor :shard_pools
-    attr_accessor :spec
     
     def initialize(model_class, options)
       @model_class = model_class      
@@ -136,7 +135,7 @@ module DataFabric
       config = config.symbolize_keys
       adapter_method = "#{config[:adapter]}_connection"
       initialize_adapter(config[:adapter])
-      @spec = ActiveRecord::Base::ConnectionSpecification.new(config, adapter_method)
+      ActiveRecord::Base::ConnectionSpecification.new(config, adapter_method)
     end
     
     def initialize_adapter(adapter)
