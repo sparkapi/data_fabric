@@ -17,7 +17,7 @@ module DataFabric
       @proc.call
     end
   end
-  
+
   class PoolProxy
     def initialize(proxy)
       @proxy = proxy
@@ -47,7 +47,7 @@ module DataFabric
       end
     end
 
-    %w(columns columns_hash table_exists? primary_keys).each do |name|
+    %w(columns column_defaults columns_hash table_exists? primary_keys).each do |name|
       define_method(name.to_sym) do |*args|
         @proxy.current_pool.send(name.to_sym, *args)
       end
@@ -61,7 +61,7 @@ module DataFabric
 
   class ConnectionProxy
     cattr_accessor :shard_pools
-    
+
     def initialize(model_class, options)
       @model_class = model_class      
       @replicated  = options[:replicated]
@@ -105,7 +105,7 @@ module DataFabric
     ensure
       set_role(old_role)
     end
-    
+
     def connected?
       current_pool.connected?
     end
@@ -122,17 +122,16 @@ module DataFabric
         ActiveRecord::ConnectionAdapters::ConnectionPool.new(spec_for(config))
       end
     end
-    
+
     private
 
     def spec_for(config)
-      # XXX This looks pretty fragile.  Will break if AR changes how it initializes connections and adapters.
       config = config.symbolize_keys
       adapter_method = "#{config[:adapter]}_connection"
       initialize_adapter(config[:adapter])
       ActiveRecord::Base::ConnectionSpecification.new(config, adapter_method)
     end
-    
+
     def initialize_adapter(adapter)
       begin
         require 'rubygems'
@@ -145,7 +144,7 @@ module DataFabric
           raise "Please install the #{adapter} adapter: `gem install activerecord-#{adapter}-adapter` (#{$!})"
         end
       end
-    end      
+    end
 
     def connection_name_builder
       @connection_name_builder ||= begin
@@ -158,11 +157,11 @@ module DataFabric
         clauses
       end
     end
-    
+
     def set_role(role)
       Thread.current[:data_fabric_role] = role
     end
-    
+
     def current_role
       Thread.current[:data_fabric_role] || 'slave'
     end

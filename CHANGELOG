@@ -2,7 +2,6 @@ DataFabric changelog
 
 HEAD
 
-- Added .rvmrc and Gemfile to ease development (Paul Gross and Dan Manges)
 - Added ConnectionProxy#respond_to? which delegates to underlying connection
 (Paul Gross and Dan Manges)
 - Remove specific handling of nested transactions and let the underlying
