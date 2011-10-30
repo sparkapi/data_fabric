@@ -1,6 +1,6 @@
 DataFabric changelog
 
-HEAD
+v1.3.3 - 2011-10-29
 
 - Added ConnectionProxy#respond_to? which delegates to underlying connection
 (Paul Gross and Dan Manges)
