@@ -154,7 +154,7 @@ module DataFabric
         clauses << @prefix if @prefix
         clauses << @shard_group if @shard_group
         clauses << StringProxy.new { DataFabric.active_shard(@shard_group) } if @shard_group
-        clauses << RAILS_ENV
+        clauses << Rails.env
         clauses << StringProxy.new { current_role } if @replicated
         clauses
       end

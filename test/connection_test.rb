@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'flexmock/test_unit'
+require 'flexmock'
 
-require 'active_record/connection_adapters/mysql_adapter'
+require 'active_record/connection_adapters/mysql2_adapter'
 
 class PrefixModel < ActiveRecord::Base
   data_fabric :prefix => 'prefix'
@@ -17,7 +17,6 @@ end
 
 class AdapterMock < ActiveRecord::ConnectionAdapters::AbstractAdapter
   # Minimum required to perform a find with no results.
-  # Works on 2.3.10, 3.0.0 and 3.0.3.
   def columns(table_name, name=nil)
     [ActiveRecord::ConnectionAdapters::Column.new('id', 0, :integer, false)]
   end
@@ -25,7 +24,7 @@ class AdapterMock < ActiveRecord::ConnectionAdapters::AbstractAdapter
     :id
   end
   def adapter_name
-    'mysql'
+    'mysql2'
   end
   def select(sql, name=nil, bindings=nil)
     []
@@ -57,12 +56,11 @@ class RawConnection
   end
 end
 
-class ConnectionTest < Test::Unit::TestCase
+class ConnectionTest < MiniTest::Unit::TestCase
+  include FlexMock::TestCase
 
   def test_should_install_into_arbase
-    # Ruby 1.8 vs 1.9 difference
-    meth = PrefixModel.methods.first.is_a?(Symbol) ? :data_fabric : 'data_fabric'
-    assert PrefixModel.methods.include?(meth)
+    assert PrefixModel.methods.map(&:to_s).include?('data_fabric')
   end
 
   def test_prefix_connection_name
@@ -139,8 +137,8 @@ class ConnectionTest < Test::Unit::TestCase
   private
 
   def setup_configuration_for(clazz, name)
-    flexmock(ActiveRecord::Base).should_receive(:mysql_connection).and_return(AdapterMock.new(RawConnection.new))
+    flexmock(ActiveRecord::Base).should_receive(:mysql2_connection).and_return(AdapterMock.new(RawConnection.new))
     ActiveRecord::Base.configurations ||= HashWithIndifferentAccess.new
-    ActiveRecord::Base.configurations[name] = HashWithIndifferentAccess.new({ :adapter => 'mysql', :database => name, :host => 'localhost'})
+    ActiveRecord::Base.configurations[name] = HashWithIndifferentAccess.new({ :adapter => 'mysql2', :database => name, :host => 'localhost'})
   end
 end
