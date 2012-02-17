@@ -1,5 +1,12 @@
 = data_fabric
 
+---------------------------
+I'm looking for someone to take over maintenance and responsibility
+for data_fabric.  If you use data_fabric or have an interest in its ongoing
+development, please let me know.
+---------------------------
+
+
 DataFabric provides flexible database connection switching for ActiveRecord.
 
 We needed two features to scale our mysql database: application-level sharding and 
