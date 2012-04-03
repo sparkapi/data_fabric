@@ -27,8 +27,7 @@ module DataFabric
         connection_handler.instance_eval do
           if @class_to_pool
             # Rails 3.2
-            @connection_pools[pool_proxy.spec]  ||= pool_proxy
-            @class_to_pool[klass_name]            = connection_pools[pool_proxy.spec]
+            @class_to_pool[klass_name] = pool_proxy
           else
             # <= Rails 3.1
             @connection_pools[klass_name] = pool_proxy
