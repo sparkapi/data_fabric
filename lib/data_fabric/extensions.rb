@@ -22,7 +22,18 @@ module DataFabric
     module ClassMethods
       def data_fabric(options)
         DataFabric.logger.info { "Creating data_fabric proxy for class #{name}" }
-        connection_handler.connection_pools[name] = PoolProxy.new(ConnectionProxy.new(self, options))
+        pool_proxy = PoolProxy.new(ConnectionProxy.new(self, options))
+        klass_name = name
+        connection_handler.instance_eval do
+          if @class_to_pool
+            # Rails 3.2
+            @connection_pools[pool_proxy.spec]  ||= pool_proxy
+            @class_to_pool[klass_name]            = connection_pools[pool_proxy.spec]
+          else
+            # <= Rails 3.1
+            @connection_pools[klass_name] = pool_proxy
+          end
+        end
       end
     end
   end
