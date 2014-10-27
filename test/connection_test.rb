@@ -56,7 +56,7 @@ class RawConnection
   end
 end
 
-class ConnectionTest < MiniTest::Unit::TestCase
+class ConnectionTest < Minitest::Test
   include FlexMock::TestCase
 
   def test_should_install_into_arbase

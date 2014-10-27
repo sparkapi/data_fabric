@@ -6,7 +6,7 @@ class TheWholeBurrito < ActiveRecord::Base
   data_fabric :prefix => 'fiveruns', :replicated => true, :shard_by => :city
 end
 
-class DatabaseTest < Test::Unit::TestCase
+class DatabaseTest < Minitest::Test
   
   def setup
     ActiveRecord::Base.configurations = load_database_yml

@@ -1,14 +1,14 @@
 require 'test_helper'
 require 'erb'
 
-class ThreadTest < Test::Unit::TestCase
+class ThreadTest < Minitest::Test
 
   MUTEX = Mutex.new
 
   def test_class_and_instance_connections
     Object.class_eval %{
       class ThreadedEnchilada < ActiveRecord::Base
-        set_table_name :enchiladas
+        self.table_name = :enchiladas
         data_fabric :prefix => 'fiveruns', :replicated => true, :shard_by => :city
       end
     }

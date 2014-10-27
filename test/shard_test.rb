@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ShardTest < Test::Unit::TestCase
+class ShardTest < Minitest::Test
 
   def test_activation_should_persist_in_thread
     DataFabric.activate_shard(:city => 'austin')
