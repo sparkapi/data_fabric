@@ -1,3 +1,4 @@
+require 'bundler/gem_tasks'
 require 'fileutils'
 include FileUtils::Verbose
 
