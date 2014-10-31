@@ -4,7 +4,7 @@ DATABASE_YML_PATH = File.join(ROOT_PATH, "test", "database.yml")
 Dir.chdir(ROOT_PATH)
 
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
 require 'erb'
@@ -16,6 +16,7 @@ if version
   gem 'activerecord', "=#{version}"
 end
 
+require 'rails'
 require 'active_record'
 require 'active_record/version'
 ActiveRecord::Base.logger = Logger.new(STDOUT)

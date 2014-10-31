@@ -11,7 +11,7 @@ class ShardModel < ActiveRecord::Base
   data_fabric :shard_by => :city
 end
 
-class TheWholeEnchilada < ActiveRecord::Base
+class TheWholeBurrito < ActiveRecord::Base
   data_fabric :prefix => 'fiveruns', :replicated => true, :shard_by => :city
 end
 
@@ -46,6 +46,7 @@ class AdapterMock < ActiveRecord::ConnectionAdapters::AbstractAdapter
   end
 
   def self.visitor_for(pool)
+    $stderr.puts "visitor_for #{pool.inspect}"
     Arel::Visitors::MySQL.new(pool)
   end
 end
@@ -56,7 +57,8 @@ class RawConnection
   end
 end
 
-class ConnectionTest < MiniTest::Unit::TestCase
+class ConnectionTest < Minitest::Test
+  i_suck_and_my_tests_are_order_dependent!
   include FlexMock::TestCase
 
   def test_should_install_into_arbase
@@ -69,6 +71,7 @@ class ConnectionTest < MiniTest::Unit::TestCase
   end
 
   def test_shard_connection_name
+    DataFabric.deactivate_shard(:city => 'austin')
     setup_configuration_for ShardModel, 'city_austin_test'
     # ensure unset means error
     assert_raises ArgumentError do
@@ -101,37 +104,37 @@ class ConnectionTest < MiniTest::Unit::TestCase
   end
 
   def test_enchilada
-    setup_configuration_for TheWholeEnchilada, 'fiveruns_city_dallas_test_slave'
-    setup_configuration_for TheWholeEnchilada, 'fiveruns_city_dallas_test_master'
+    setup_configuration_for TheWholeBurrito, 'fiveruns_city_dallas_test_slave'
+    setup_configuration_for TheWholeBurrito, 'fiveruns_city_dallas_test_master'
     DataFabric.activate_shard :city => :dallas do
-      assert_equal 'fiveruns_city_dallas_test_slave', TheWholeEnchilada.connection.connection_name
+      assert_equal 'fiveruns_city_dallas_test_slave', TheWholeBurrito.connection.connection_name
 
       # Should use the slave
       assert_raises ActiveRecord::RecordNotFound do
-        TheWholeEnchilada.find(1)
+        TheWholeBurrito.find(0)
       end
 
       # Should use the master
-      mmmm = TheWholeEnchilada.new
-      mmmm.instance_variable_set(:@attributes, { 'id' => 1 })
+      mmmm = TheWholeBurrito.new
+      mmmm.instance_variable_set(:@attributes, { 'id' => 0 , 'name' => 'burrit0'})
       assert_raises ActiveRecord::RecordNotFound do
         mmmm.reload
       end
       # ...but immediately set it back to default to the slave
-      assert_equal 'fiveruns_city_dallas_test_slave', TheWholeEnchilada.connection.connection_name
+      assert_equal 'fiveruns_city_dallas_test_slave', TheWholeBurrito.connection.connection_name
 
       # Should use the master
-      TheWholeEnchilada.transaction do
+      TheWholeBurrito.transaction do
         mmmm.save!
       end
-      TheWholeEnchilada.verify_active_connections!
-      TheWholeEnchilada.clear_active_connections!
-      TheWholeEnchilada.clear_all_connections!
+      TheWholeBurrito.verify_active_connections!
+      TheWholeBurrito.clear_active_connections!
+      TheWholeBurrito.clear_all_connections!
     end
 
-    TheWholeEnchilada.verify_active_connections!
-    TheWholeEnchilada.clear_active_connections!
-    TheWholeEnchilada.clear_all_connections!
+    TheWholeBurrito.verify_active_connections!
+    TheWholeBurrito.clear_active_connections!
+    TheWholeBurrito.clear_all_connections!
   end
 
   private

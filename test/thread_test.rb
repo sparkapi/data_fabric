@@ -1,18 +1,24 @@
 require 'test_helper'
 require 'erb'
 
-class ThreadTest < Test::Unit::TestCase
+class ThreadTest < Minitest::Test
+  i_suck_and_my_tests_are_order_dependent!
+
+  def teardown
+  end
 
   MUTEX = Mutex.new
 
   def test_class_and_instance_connections
     Object.class_eval %{
       class ThreadedEnchilada < ActiveRecord::Base
-        set_table_name :enchiladas
+        self.table_name = :enchiladas
         data_fabric :prefix => 'fiveruns', :replicated => true, :shard_by => :city
       end
     }
     ActiveRecord::Base.configurations = load_database_yml
+
+    DataFabric.activate_shard(:city => 'austin')
 
     cconn = ThreadedEnchilada.connection
     iconn = ThreadedEnchilada.new.connection
